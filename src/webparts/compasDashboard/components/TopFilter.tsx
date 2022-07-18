@@ -98,6 +98,7 @@ const TopFilter = (props: any) => {
         arrCountries = cLi.map((li) => {
           return li.Title;
         });
+        arrCountries.sort();
         setCountryChoice(arrCountries);
       })
       .then(() => {
@@ -227,12 +228,16 @@ const TopFilter = (props: any) => {
         <div className={classes.filterSection}>
           <div className={classes.filterSectionTop}>
             {/* Project Name Section */}
-            <div className={classes.filterInput}>
+            <div className={classes.filterInput} style={{ width: "23%" }}>
               <InputLabel>Project Name:</InputLabel>
               <TextField
                 value={filterArr.Name}
                 id="input-with-icon-textfield"
-                style={{ width: "399px", height: "61px", marginRight: "10px" }}
+                style={{
+                  width: "100%",
+                  height: "61px",
+                  marginRight: "10px",
+                }}
                 label=""
                 InputLabelProps={{ shrink: false }}
                 InputProps={{
@@ -253,13 +258,13 @@ const TopFilter = (props: any) => {
               />
             </div>
             {/* Priority Section */}
-            <div className={classes.filterInput}>
+            <div className={classes.filterInput} style={{ width: "8%" }}>
               <InputLabel>Priority:</InputLabel>
               <div className="ddSelect">
                 <Select
                   labelId="demo-simple-select-label"
                   style={{
-                    width: "123px",
+                    width: "100%",
                     height: "56px",
                     borderRadius: "7px",
                     marginRight: "10px",
@@ -279,13 +284,13 @@ const TopFilter = (props: any) => {
               </div>
             </div>
             {/* Country/IBVT Section */}
-            <div className={classes.filterInput}>
+            <div className={classes.filterInput} style={{ width: "14%" }}>
               <InputLabel>Country/IBVT:</InputLabel>
               <div className="ddSelect">
                 <Select
                   labelId="demo-simple-select-label"
                   style={{
-                    width: "236px",
+                    width: "100%",
                     height: "56px",
                     borderRadius: "7px",
                     marginRight: "10px",
@@ -308,11 +313,11 @@ const TopFilter = (props: any) => {
               </div>
             </div>
             {/* Organization Unit Section */}
-            <div className={classes.filterInput}>
+            <div className={classes.filterInput} style={{ width: "14%" }}>
               <InputLabel>Organization Unit:</InputLabel>
               <TextField
                 id="input-with-icon-textfield"
-                style={{ width: "260px", height: "61px", marginRight: "10px" }}
+                style={{ width: "100%", height: "61px", marginRight: "10px" }}
                 label=""
                 InputLabelProps={{ shrink: false }}
                 value={filterArr.UnitName}
@@ -463,13 +468,14 @@ const TopFilter = (props: any) => {
                 </div>
               </div>
               {/* Creation Date Section */}
-              <div className={classes.filterInput}>
+              <div className={classes.filterInput} style={{ width: "20%" }}>
                 <InputLabel>Creation Date:</InputLabel>
 
                 <DatePicker
                   className={`TopFilterDatePicker ${datePickerClass}`}
                   style={{
-                    width: "350px",
+                    // width: "350px",
+                    width: "100%",
                     height: "56px",
                     borderRadius: "7px",
                     marginRight: "10px",
@@ -512,13 +518,14 @@ const TopFilter = (props: any) => {
                 />
               </div>
               {/* Last Modified Date Section */}
-              <div className={classes.filterInput}>
+              <div className={classes.filterInput} style={{ width: "20%" }}>
                 <InputLabel>Last Modified Date:</InputLabel>
 
                 <DatePicker
                   className="TopFilterDatePicker"
                   style={{
-                    width: "350px",
+                    // width: "350px",
+                    width: "100%",
                     height: "56px",
                     borderRadius: "7px",
                     marginRight: "10px",

@@ -120,7 +120,8 @@ const App = (props: any) => {
       });
     props.sp.web.lists
       .getByTitle("Priorities")
-      .items.top(4000).get()
+      .items.top(4000)
+      .get()
       .then((res) => {
         console.log(res);
         arrPriority = res.map((re) => ({
@@ -132,7 +133,8 @@ const App = (props: any) => {
     // Actions List Call
     props.sp.web.lists
       .getByTitle("Actions")
-      .items.top(4000).select("*", "CASRef/ID", "CASAuthor/EMail", "CASAuthor/Title")
+      .items.top(4000)
+      .select("*", "CASRef/ID", "CASAuthor/EMail", "CASAuthor/Title")
       .expand("CASRef", "CASAuthor")
       .orderBy("Created", true)
       .get()
@@ -152,7 +154,8 @@ const App = (props: any) => {
       .then(async () => {
         await props.sp.web.lists
           .getByTitle("Countries")
-          .items.top(4000).get()
+          .items.top(4000)
+          .get()
           .then((cLi) => {
             arrCountries = cLi.map((li) => {
               return li.Title ? li.Title : "";
@@ -171,180 +174,184 @@ const App = (props: any) => {
           });
         Admin
           ? await props.sp.web.lists
-            .getByTitle("Projects")
-            .items.select(
-              "*",
-              "CASUser/Title",
-              "CASUser/ID",
-              "CASUser/EMail",
-              "CASCountry/Title",
-              "CASEngType/Title",
-              "CASPriority/Title",
-              "CASStatus/Title",
-              "CASEngSubType/Title"
-            )
-            .expand(
-              "CASUser",
-              "CASCountry",
-              "CASEngType",
-              "CASPriority",
-              "CASStatus",
-              "CASEngSubType"
-            )
-            .top(4000)
-            .orderBy("Modified", false)
-            .get()
-            .then(async (response) => {
-              // response = response.filter()
-              ArrProjectData = await response.map((item) => {
-                let filteredComments = arrActionData.filter(
-                  (aData) => aData.Ref == item.ID
-                );
+              .getByTitle("Projects")
+              .items.select(
+                "*",
+                "CASUser/Title",
+                "CASUser/ID",
+                "CASUser/EMail",
+                "CASCountry/Title",
+                "CASEngType/Title",
+                "CASPriority/Title",
+                "CASStatus/Title",
+                "CASEngSubType/Title"
+              )
+              .expand(
+                "CASUser",
+                "CASCountry",
+                "CASEngType",
+                "CASPriority",
+                "CASStatus",
+                "CASEngSubType"
+              )
+              .top(4000)
+              .orderBy("Modified", false)
+              .get()
+              .then(async (response) => {
+                // response = response.filter()
+                ArrProjectData = await response.map((item) => {
+                  let filteredComments = arrActionData.filter(
+                    (aData) => aData.Ref == item.ID
+                  );
 
-                let filteredSpentData = arrSpentData.filter(
-                  (aData: any) => aData.CASRefId == item.ID
-                );
-                let requestorDetails = [];
-                requestorDetails = item.CASUser
-                  ? item.CASUser.map((user) => ({
-                    Name: user.Title,
-                    Email: user.EMail,
-                    ShowUserDetail: false,
-                    ShowRemUsers: false,
-                  }))
-                  : [];
-                return {
-                  ID: item.ID ? item.ID : 0,
-                  LatestComment: filteredComments ? filteredComments[filteredComments.length - 1] : [],
-                  Status: item.CASStatus.Title ? item.CASStatus.Title : "",
-                  Priority: item.CASPriority.Title
-                    ? item.CASPriority.Title
-                    : "",
-                  Name: item.Title ? item.Title : "",
-                  EngagementType: item.CASEngType
-                    ? item.CASEngType.Title
-                    : "",
-                  EngagementSubType: item.CASEngSubType
-                    ? item.CASEngSubType.Title
-                    : "",
-                  UnitName: item.CASOrgUnit ? item.CASOrgUnit : "",
-                  CreationDate: new Date(item.Created),
-                  CountryIBVT: item.CASCountry.Title
-                    ? item.CASCountry.Title
-                    : "",
-                  Requestor: requestorDetails,
-                  LastModifiedDate: new Date(item.Modified),
-                  LatestActionModified:
-                    filteredComments.length > 0
-                      ? filteredComments[0].Created
-                      : new Date("07/08/1989").toISOString(),
-                  ShowRemainingUsers: false,
-                  PriorityNo: item.CASPriority.Title
-                    ? item.CASPriority.Title.toLowerCase() == "low"
-                      ? "1"
-                      : item.CASPriority.Title.toLowerCase() == "medium"
+                  let filteredSpentData = arrSpentData.filter(
+                    (aData: any) => aData.CASRefId == item.ID
+                  );
+                  let requestorDetails = [];
+                  requestorDetails = item.CASUser
+                    ? item.CASUser.map((user) => ({
+                        Name: user.Title,
+                        Email: user.EMail,
+                        ShowUserDetail: false,
+                        ShowRemUsers: false,
+                      }))
+                    : [];
+                  return {
+                    ID: item.ID ? item.ID : 0,
+                    LatestComment: filteredComments
+                      ? filteredComments[filteredComments.length - 1]
+                      : [],
+                    Status: item.CASStatus.Title ? item.CASStatus.Title : "",
+                    Priority: item.CASPriority.Title
+                      ? item.CASPriority.Title
+                      : "",
+                    Name: item.Title ? item.Title : "",
+                    EngagementType: item.CASEngType
+                      ? item.CASEngType.Title
+                      : "",
+                    EngagementSubType: item.CASEngSubType
+                      ? item.CASEngSubType.Title
+                      : "",
+                    UnitName: item.CASOrgUnit ? item.CASOrgUnit : "",
+                    CreationDate: new Date(item.Created),
+                    CountryIBVT: item.CASCountry.Title
+                      ? item.CASCountry.Title
+                      : "",
+                    Requestor: requestorDetails,
+                    LastModifiedDate: new Date(item.Modified),
+                    LatestActionModified:
+                      filteredComments.length > 0
+                        ? filteredComments[0].Created
+                        : new Date("07/08/1989").toISOString(),
+                    ShowRemainingUsers: false,
+                    PriorityNo: item.CASPriority.Title
+                      ? item.CASPriority.Title.toLowerCase() == "low"
+                        ? "1"
+                        : item.CASPriority.Title.toLowerCase() == "medium"
                         ? "2"
                         : item.CASPriority.Title.toLowerCase() == "high"
-                          ? "3"
-                          : ""
-                    : "",
-                  CrossChargeInfo: item.CASCCI,
-                  filteredSpentData: filteredSpentData
-                    ? filteredSpentData
-                    : [],
-                };
-              });
-              setRenderTable(true);
-            })
+                        ? "3"
+                        : ""
+                      : "",
+                    CrossChargeInfo: item.CASCCI,
+                    filteredSpentData: filteredSpentData
+                      ? filteredSpentData
+                      : [],
+                  };
+                });
+                setRenderTable(true);
+              })
           : await props.sp.web.lists
-            .getByTitle("Projects")
-            .items.select(
-              "*",
-              "CASUser/Title",
-              "CASUser/ID",
-              "CASUser/EMail",
-              "CASCountry/Title",
-              "CASEngType/Title",
-              "CASPriority/Title",
-              "CASStatus/Title",
-              "CASEngSubType/Title"
-            )
-            .expand(
-              "CASUser",
-              "CASCountry",
-              "CASEngType",
-              "CASPriority",
-              "CASStatus",
-              "CASEngSubType"
-            )
-            .top(4000)
-            .filter(`CASUser/EMail eq '${currentUser}'`)
-            .orderBy("Modified", false)
-            .get()
-            .then(async (response) => {
-              // response = response.filter()
-              ArrProjectData = await response.map((item) => {
-                let filteredComments = arrActionData.filter(
-                  (aData) => aData.Ref == item.ID
-                );
-                let filteredSpentData = arrSpentData.filter(
-                  (aData: any) => aData.CASRefId == item.ID
-                );
-                console.log(filteredSpentData);
+              .getByTitle("Projects")
+              .items.select(
+                "*",
+                "CASUser/Title",
+                "CASUser/ID",
+                "CASUser/EMail",
+                "CASCountry/Title",
+                "CASEngType/Title",
+                "CASPriority/Title",
+                "CASStatus/Title",
+                "CASEngSubType/Title"
+              )
+              .expand(
+                "CASUser",
+                "CASCountry",
+                "CASEngType",
+                "CASPriority",
+                "CASStatus",
+                "CASEngSubType"
+              )
+              .top(4000)
+              .filter(`CASUser/EMail eq '${currentUser}'`)
+              .orderBy("Modified", false)
+              .get()
+              .then(async (response) => {
+                // response = response.filter()
+                ArrProjectData = await response.map((item) => {
+                  let filteredComments = arrActionData.filter(
+                    (aData) => aData.Ref == item.ID
+                  );
+                  let filteredSpentData = arrSpentData.filter(
+                    (aData: any) => aData.CASRefId == item.ID
+                  );
+                  console.log(filteredSpentData);
 
-                let requestorDetails = [];
+                  let requestorDetails = [];
 
-                requestorDetails = item.CASUser
-                  ? item.CASUser.map((user) => ({
-                    Name: user.Title,
-                    Email: user.EMail,
-                    ShowUserDetail: false,
-                    ShowRemUsers: false,
-                  }))
-                  : [];
-                return {
-                  ID: item.ID ? item.ID : 0,
-                  LatestComment: filteredComments ? filteredComments[filteredComments.length - 1] : [],
-                  Status: item.CASStatus.Title ? item.CASStatus.Title : "",
-                  Priority: item.CASPriority.Title
-                    ? item.CASPriority.Title
-                    : "",
-                  Name: item.Title ? item.Title : "",
-                  EngagementType: item.CASEngType
-                    ? item.CASEngType.Title
-                    : "",
-                  EngagementSubType: item.CASEngSubType
-                    ? item.CASEngSubType.Title
-                    : "",
-                  UnitName: item.CASOrgUnit ? item.CASOrgUnit : "",
-                  CreationDate: new Date(item.Created),
-                  CountryIBVT: item.CASCountry.Title
-                    ? item.CASCountry.Title
-                    : "",
-                  Requestor: requestorDetails,
-                  LastModifiedDate: new Date(item.Modified),
-                  LatestActionModified:
-                    filteredComments.length > 0
-                      ? filteredComments[0].Created
-                      : new Date("07/08/1989").toISOString(),
-                  ShowRemainingUsers: false,
-                  PriorityNo: item.CASPriority.Title
-                    ? item.CASPriority.Title.toLowerCase() == "low"
-                      ? "1"
-                      : item.CASPriority.Title.toLowerCase() == "medium"
+                  requestorDetails = item.CASUser
+                    ? item.CASUser.map((user) => ({
+                        Name: user.Title,
+                        Email: user.EMail,
+                        ShowUserDetail: false,
+                        ShowRemUsers: false,
+                      }))
+                    : [];
+                  return {
+                    ID: item.ID ? item.ID : 0,
+                    LatestComment: filteredComments
+                      ? filteredComments[filteredComments.length - 1]
+                      : [],
+                    Status: item.CASStatus.Title ? item.CASStatus.Title : "",
+                    Priority: item.CASPriority.Title
+                      ? item.CASPriority.Title
+                      : "",
+                    Name: item.Title ? item.Title : "",
+                    EngagementType: item.CASEngType
+                      ? item.CASEngType.Title
+                      : "",
+                    EngagementSubType: item.CASEngSubType
+                      ? item.CASEngSubType.Title
+                      : "",
+                    UnitName: item.CASOrgUnit ? item.CASOrgUnit : "",
+                    CreationDate: new Date(item.Created),
+                    CountryIBVT: item.CASCountry.Title
+                      ? item.CASCountry.Title
+                      : "",
+                    Requestor: requestorDetails,
+                    LastModifiedDate: new Date(item.Modified),
+                    LatestActionModified:
+                      filteredComments.length > 0
+                        ? filteredComments[0].Created
+                        : new Date("07/08/1989").toISOString(),
+                    ShowRemainingUsers: false,
+                    PriorityNo: item.CASPriority.Title
+                      ? item.CASPriority.Title.toLowerCase() == "low"
+                        ? "1"
+                        : item.CASPriority.Title.toLowerCase() == "medium"
                         ? "2"
                         : item.CASPriority.Title.toLowerCase() == "high"
-                          ? "3"
-                          : ""
-                    : "",
-                  CrossChargeInfo: item.CASCCI,
-                  filteredSpentData: filteredSpentData
-                    ? filteredSpentData
-                    : [],
-                };
+                        ? "3"
+                        : ""
+                      : "",
+                    CrossChargeInfo: item.CASCCI,
+                    filteredSpentData: filteredSpentData
+                      ? filteredSpentData
+                      : [],
+                  };
+                });
+                setRenderTable(true);
               });
-              setRenderTable(true);
-            });
       })
       .catch((error) => {
         console.log(error);
@@ -388,8 +395,8 @@ const App = (props: any) => {
       arrFilteredData = arrFilteredData.filter((fItem) =>
         filterValue.Requestor
           ? fItem.Requestor.map((req) => req.Email).some(
-            (userMail) => userMail == filterValue.Requestor
-          )
+              (userMail) => userMail == filterValue.Requestor
+            )
           : true
       );
       arrFilteredData = arrFilteredData.filter((fItem) =>
@@ -409,8 +416,8 @@ const App = (props: any) => {
         filterValue.Status.length > 0 && fItem.Status
           ? filterValue.Status["includes"](fItem.Status)
           : filterValue.Status.length > 0
-            ? false
-            : true
+          ? false
+          : true
       );
       arrFilteredData = arrFilteredData.filter((fItem) =>
         filterValue.ID != 0 ? filterValue.ID == fItem.ID : true
@@ -418,14 +425,14 @@ const App = (props: any) => {
       arrFilteredData = arrFilteredData.filter((fItem) =>
         filterValue.CreationDate && filterValue.CreationDate != "Invalid Date"
           ? new Date(filterValue.CreationDate).toLocaleDateString() ==
-          new Date(fItem.CreationDate).toLocaleDateString()
+            new Date(fItem.CreationDate).toLocaleDateString()
           : true
       );
       arrFilteredData = arrFilteredData.filter((fItem) =>
         filterValue.LastModifiedDate &&
-          filterValue.LastModifiedDate != "Invalid Date"
+        filterValue.LastModifiedDate != "Invalid Date"
           ? new Date(filterValue.LastModifiedDate).toLocaleDateString() ==
-          new Date(fItem.LastModifiedDate).toLocaleDateString()
+            new Date(fItem.LastModifiedDate).toLocaleDateString()
           : true
       );
       setTableData(arrFilteredData);
@@ -543,7 +550,12 @@ const App = (props: any) => {
           data={ArrProjectData}
         />
         <TableContainer
-          style={{ width: "98%", margin: "auto", padding: "2rem" }}
+          style={{
+            width: "98%",
+            margin: "auto",
+            padding: "2rem",
+            overflowX: "auto",
+          }}
         >
           <Table className={classes.projectTable}>
             <TableHead>
@@ -552,29 +564,29 @@ const App = (props: any) => {
                   onClick={() => {
                     objSorted.ID == "ascending" || objSorted.ID == ""
                       ? (objSorted = {
-                        ID: "descending",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "descending",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "ascending",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "ascending",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         objSorted.ID == "ascending" || objSorted.ID == ""
@@ -597,39 +609,39 @@ const App = (props: any) => {
                   onClick={() => {
                     objSorted.Status == "ascending" || objSorted.Status == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "descending",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "descending",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "ascending",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "ascending",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         objSorted.Status == "ascending" ||
-                          objSorted.Status == ""
+                        objSorted.Status == ""
                           ? b.Status.toLowerCase().localeCompare(
-                            a.Status.toLowerCase()
-                          )
+                              a.Status.toLowerCase()
+                            )
                           : a.Status.toLowerCase().localeCompare(
-                            b.Status.toLowerCase()
-                          )
+                              b.Status.toLowerCase()
+                            )
                       ),
                     ]);
                     setData(tableData.slice(0, pageSize));
@@ -645,35 +657,35 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.Priority == "ascending" ||
-                      objSorted.Priority == ""
+                    objSorted.Priority == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "descending",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "descending",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "ascending",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "ascending",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         objSorted.Priority == "ascending" ||
-                          objSorted.Priority == ""
+                        objSorted.Priority == ""
                           ? b.PriorityNo - a.PriorityNo
                           : a.PriorityNo - b.PriorityNo
                       ),
@@ -692,38 +704,38 @@ const App = (props: any) => {
                   onClick={() => {
                     objSorted.Name == "ascending" || objSorted.Name == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "descending",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "descending",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "ascending",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "ascending",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         objSorted.Name == "ascending" || objSorted.Name == ""
                           ? b.Name.toLowerCase().localeCompare(
-                            a.Name.toLowerCase()
-                          )
+                              a.Name.toLowerCase()
+                            )
                           : a.Name.toLowerCase().localeCompare(
-                            b.Name.toLowerCase()
-                          )
+                              b.Name.toLowerCase()
+                            )
                       ),
                     ]);
                     setData(tableData.slice(0, pageSize));
@@ -739,42 +751,42 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.EngagementType == "ascending" ||
-                      objSorted.EngagementType == ""
+                    objSorted.EngagementType == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "descending",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "descending",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "ascending",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "ascending",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         b.EngagementType && a.EngagementType
                           ? objSorted.EngagementType == "ascending" ||
                             objSorted.EngagementType == ""
                             ? b.EngagementType.toLowerCase().localeCompare(
-                              a.EngagementType.toLowerCase()
-                            )
+                                a.EngagementType.toLowerCase()
+                              )
                             : a.EngagementType.toLowerCase().localeCompare(
-                              b.EngagementType.toLowerCase()
-                            )
+                                b.EngagementType.toLowerCase()
+                              )
                           : ""
                       ),
                     ]);
@@ -791,42 +803,42 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.EngagementSubType == "ascending" ||
-                      objSorted.EngagementSubType == ""
+                    objSorted.EngagementSubType == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "descending",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "descending",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "ascending",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "ascending",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         b.EngagementSubType && a.EngagementSubType
                           ? objSorted.EngagementSubType == "ascending" ||
                             objSorted.EngagementSubType == ""
                             ? b.EngagementSubType.toLowerCase().localeCompare(
-                              a.EngagementSubType.toLowerCase()
-                            )
+                                a.EngagementSubType.toLowerCase()
+                              )
                             : a.EngagementSubType.toLowerCase().localeCompare(
-                              b.EngagementSubType.toLowerCase()
-                            )
+                                b.EngagementSubType.toLowerCase()
+                              )
                           : ""
                       ),
                     ]);
@@ -843,42 +855,42 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.UnitName == "ascending" ||
-                      objSorted.UnitName == ""
+                    objSorted.UnitName == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "descending",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "descending",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "ascending",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "ascending",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         b.UnitName && a.UnitName
                           ? objSorted.UnitName == "ascending" ||
                             objSorted.UnitName == ""
                             ? b.UnitName.toLowerCase().localeCompare(
-                              a.UnitName.toLowerCase()
-                            )
+                                a.UnitName.toLowerCase()
+                              )
                             : a.UnitName.toLowerCase().localeCompare(
-                              b.UnitName.toLowerCase()
-                            )
+                                b.UnitName.toLowerCase()
+                              )
                           : ""
                       ),
                     ]);
@@ -895,39 +907,39 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.CreationDate == "ascending" ||
-                      objSorted.CreationDate == ""
+                    objSorted.CreationDate == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "descending",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "descending",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "ascending",
-                        CountryIBVT: "",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "ascending",
+                          CountryIBVT: "",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         objSorted.CreationDate == "ascending" ||
-                          objSorted.CreationDate == ""
+                        objSorted.CreationDate == ""
                           ? Date.parse(a.CreationDate) -
-                          Date.parse(b.CreationDate)
+                            Date.parse(b.CreationDate)
                           : Date.parse(b.CreationDate) -
-                          Date.parse(a.CreationDate)
+                            Date.parse(a.CreationDate)
                       ),
                     ]);
                     setData(tableData.slice(0, pageSize));
@@ -943,42 +955,42 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.CountryIBVT == "ascending" ||
-                      objSorted.CountryIBVT == ""
+                    objSorted.CountryIBVT == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "descending",
-                        LatestAction: "",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "descending",
+                          LatestAction: "",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "ascending",
-                        LatestAction: "",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "ascending",
+                          LatestAction: "",
+                        });
                     setTableData([
                       ...tableData.sort((a, b) =>
                         b.CountryIBVT && a.CountryIBVT
                           ? objSorted.CountryIBVT == "ascending" ||
                             objSorted.CountryIBVT == ""
                             ? b.CountryIBVT.toLowerCase().localeCompare(
-                              a.CountryIBVT.toLowerCase()
-                            )
+                                a.CountryIBVT.toLowerCase()
+                              )
                             : a.CountryIBVT.toLowerCase().localeCompare(
-                              b.CountryIBVT.toLowerCase()
-                            )
+                                b.CountryIBVT.toLowerCase()
+                              )
                           : ""
                       ),
                     ]);
@@ -1000,41 +1012,41 @@ const App = (props: any) => {
                 <TableCell
                   onClick={() => {
                     objSorted.LatestAction == "ascending" ||
-                      objSorted.LatestAction == ""
+                    objSorted.LatestAction == ""
                       ? (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "descending",
-                      })
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "descending",
+                        })
                       : (objSorted = {
-                        ID: "",
-                        Status: "",
-                        Priority: "",
-                        Name: "",
-                        EngagementType: "",
-                        EngagementSubType: "",
-                        UnitName: "",
-                        CreationDate: "",
-                        CountryIBVT: "",
-                        LatestAction: "ascending",
-                      });
+                          ID: "",
+                          Status: "",
+                          Priority: "",
+                          Name: "",
+                          EngagementType: "",
+                          EngagementSubType: "",
+                          UnitName: "",
+                          CreationDate: "",
+                          CountryIBVT: "",
+                          LatestAction: "ascending",
+                        });
 
                     setTableData([
                       ...tableData.sort((a, b) =>
                         //  (a.LatestComment && b.LatestComment) &&
                         objSorted.LatestAction == "ascending" ||
-                          objSorted.LatestAction == ""
+                        objSorted.LatestAction == ""
                           ? Date.parse(a.LatestActionModified) -
-                          Date.parse(b.LatestActionModified)
+                            Date.parse(b.LatestActionModified)
                           : Date.parse(b.LatestActionModified) -
-                          Date.parse(a.LatestActionModified)
+                            Date.parse(a.LatestActionModified)
                       ),
                     ]);
                     setData(tableData.slice(0, pageSize));
@@ -1083,16 +1095,16 @@ const App = (props: any) => {
                                       ? "#359942"
                                       : row.Status.toLowerCase() ==
                                         "waiting for feedback"
-                                        ? "#f5944e"
-                                        : row.Status.toLowerCase() == "lead"
-                                          ? "#f24998"
-                                          : row.Status.toLowerCase() == "parked"
-                                            ? "#999999"
-                                            : row.Status.toLowerCase() == "closed"
-                                              ? "#1c75bc"
-                                              : row.Status.toLowerCase() == "canceled"
-                                                ? "#7e2e7a"
-                                                : "#000",
+                                      ? "#f5944e"
+                                      : row.Status.toLowerCase() == "lead"
+                                      ? "#f24998"
+                                      : row.Status.toLowerCase() == "parked"
+                                      ? "#999999"
+                                      : row.Status.toLowerCase() == "closed"
+                                      ? "#1c75bc"
+                                      : row.Status.toLowerCase() == "canceled"
+                                      ? "#7e2e7a"
+                                      : "#000",
                                 }}
                               ></div>
                             )}
@@ -1104,16 +1116,16 @@ const App = (props: any) => {
                                     ? "#359942"
                                     : row.Status.toLowerCase() ==
                                       "waiting for feedback"
-                                      ? "#f5944e"
-                                      : row.Status.toLowerCase() == "lead"
-                                        ? "#f24998"
-                                        : row.Status.toLowerCase() == "parked"
-                                          ? "#999999"
-                                          : row.Status.toLowerCase() == "closed"
-                                            ? "#1c75bc"
-                                            : row.Status.toLowerCase() == "canceled"
-                                              ? "#7e2e7a"
-                                              : "#000",
+                                    ? "#f5944e"
+                                    : row.Status.toLowerCase() == "lead"
+                                    ? "#f24998"
+                                    : row.Status.toLowerCase() == "parked"
+                                    ? "#999999"
+                                    : row.Status.toLowerCase() == "closed"
+                                    ? "#1c75bc"
+                                    : row.Status.toLowerCase() == "canceled"
+                                    ? "#7e2e7a"
+                                    : "#000",
                               }}
                             >
                               {row.Status}
@@ -1195,30 +1207,33 @@ const App = (props: any) => {
                           new Date(row.CreationDate).getFullYear()} */}
                           {/* {DateFormatter(row.CreationDate)} */}
                           <div className={classes.normal}>
-                            {`${+new Date(row.CreationDate)
-                              .toLocaleDateString()
-                              .split("/")[1] < 10
-                              ? "0" +
-                              new Date(row.CreationDate)
+                            {`${
+                              +new Date(row.CreationDate)
                                 .toLocaleDateString()
-                                .split("/")[1]
-                              : new Date(row.CreationDate)
-                                .toLocaleDateString()
-                                .split("/")[1]
-                              }/${+new Date(row.CreationDate)
+                                .split("/")[1] < 10
+                                ? "0" +
+                                  new Date(row.CreationDate)
+                                    .toLocaleDateString()
+                                    .split("/")[1]
+                                : new Date(row.CreationDate)
+                                    .toLocaleDateString()
+                                    .split("/")[1]
+                            }/${
+                              +new Date(row.CreationDate)
                                 .toLocaleDateString()
                                 .split("/")[0] < 10
                                 ? "0" +
-                                new Date(row.CreationDate)
-                                  .toLocaleDateString()
-                                  .split("/")[0]
+                                  new Date(row.CreationDate)
+                                    .toLocaleDateString()
+                                    .split("/")[0]
                                 : new Date(row.CreationDate)
-                                  .toLocaleDateString()
-                                  .split("/")[0]
-                              }/${new Date(row.CreationDate)
-                                .toLocaleDateString()
-                                .split("/")[2].toString().substr(-2)
-                              }`}
+                                    .toLocaleDateString()
+                                    .split("/")[0]
+                            }/${new Date(row.CreationDate)
+                              .toLocaleDateString()
+                              .split("/")[2]
+                              .toString()
+                              .substr(-2)}`}
                             {/* {new Date(row.CreationDate).toLocaleDateString()} */}
                           </div>
                         </TableCell>
@@ -1505,29 +1520,29 @@ const App = (props: any) => {
                                         .toLocaleDateString()
                                         .split("/")[1] < 10
                                         ? "0" +
-                                        new Date(row.LatestComment.Created)
-                                          .toLocaleDateString()
-                                          .split("/")[1]
+                                          new Date(row.LatestComment.Created)
+                                            .toLocaleDateString()
+                                            .split("/")[1]
                                         : new Date(row.LatestComment.Created)
-                                          .toLocaleDateString()
-                                          .split("/")[1]}
+                                            .toLocaleDateString()
+                                            .split("/")[1]}
                                       /
                                       {+new Date(row.LatestComment.Created)
                                         .toLocaleDateString()
                                         .split("/")[0] < 10
                                         ? "0" +
-                                        new Date(row.LatestComment.Created)
-                                          .toLocaleDateString()
-                                          .split("/")[0]
+                                          new Date(row.LatestComment.Created)
+                                            .toLocaleDateString()
+                                            .split("/")[0]
                                         : new Date(row.LatestComment.Created)
-                                          .toLocaleDateString()
-                                          .split("/")[0]}
+                                            .toLocaleDateString()
+                                            .split("/")[0]}
                                       /
-                                      {
-                                        new Date(row.LatestComment.Created)
-                                          .toLocaleDateString()
-                                          .split("/")[2].toString().substr(-2)
-                                      }
+                                      {new Date(row.LatestComment.Created)
+                                        .toLocaleDateString()
+                                        .split("/")[2]
+                                        .toString()
+                                        .substr(-2)}
                                     </div>
                                   )}
                                 </div>
@@ -1536,11 +1551,11 @@ const App = (props: any) => {
                                 className={`${classes.LABody} ${classes.normal}`}
                               >
                                 {row.LatestComment &&
-                                  row.LatestComment.Text.length > 145
+                                row.LatestComment.Text.length > 145
                                   ? `${row.LatestComment.Text.substr(
-                                    0,
-                                    144
-                                  )} . . .`
+                                      0,
+                                      144
+                                    )} . . .`
                                   : row.LatestComment && row.LatestComment.Text}
                               </div>
                               <div>
